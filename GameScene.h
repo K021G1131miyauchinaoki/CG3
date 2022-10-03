@@ -66,3 +66,9 @@ private: // メンバ変数
 	Sprite* sprite2 = nullptr;
 };
 
+template<class T>
+inline	void safe_delete(T*& p)
+{
+	delete	p;
+	p = nullptr;
+}
