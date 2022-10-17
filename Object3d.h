@@ -216,5 +216,9 @@ private: // メンバ変数
 	XMMATRIX matWorld;
 	// 親オブジェクト
 	Object3d* parent = nullptr;
+	//ビルボード行列
+	static	XMMATRIX	matBillboard;
+	//Y軸周りのビルボード行列
+	static	XMMATRIX	matBillboardY;
 };
 
