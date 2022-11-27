@@ -5,6 +5,7 @@
 #include <d3d12.h>
 #include <DirectXMath.h>
 #include <d3dx12.h>
+#include<forward_list>
 
 /// <summary>
 /// 3Dオブジェクト
@@ -41,6 +42,23 @@ public: // サブクラス
 		XMMATRIX	matBillboard;//ビルボード行列
 	};
 
+	//パーティクル1粒
+	struct Particle
+	{
+		//directxを省略
+		using	XMFLOAT3 = DirectX::XMFLOAT3;
+		//座標
+		XMFLOAT3	position = {};
+		//速度
+		XMFLOAT3	velocity = {};
+		//加速度
+		XMFLOAT3	accel = {};
+		//現在フレーム
+		int	frame = 0;
+		//終了フレーム
+		int	num_frame = 0;
+	};
+
 private: // 定数
 	static const int division = 50;					// 分割数
 	static const float radius;				// 底面の半径
@@ -48,7 +66,7 @@ private: // 定数
 	static const int planeCount = division * 2 + division * 2;		// 面の数
 	//static const int vertexCount = planeCount * 3;		// 頂点数
 	//static const int vertexCount = 1;		// 頂点数
-	static const int vertexCount = 30;		// 頂点数
+	static const int vertexCount = 1024;		// 頂点数
 	//static const int	indexCount = 3 * 2;//インデックス数
 	static const int	indexCount = 1;//インデックス数
 
@@ -197,6 +215,9 @@ public: // メンバ関数
 	/// </summary>
 	void Draw();
 
+	void	Add(int life, XMFLOAT3	position, XMFLOAT3	velocity, XMFLOAT3	accel);
+
+
 	/// <summary>
 	/// 座標の取得
 	/// </summary>
@@ -227,5 +248,8 @@ private: // メンバ変数
 	static	XMMATRIX	matBillboard;
 	//Y軸周りのビルボード行列
 	static	XMMATRIX	matBillboardY;
+
+	//パーティクル配列
+	std::forward_list<Particle>particles;
 };
 
