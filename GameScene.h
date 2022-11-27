@@ -5,6 +5,8 @@
 #include "Input.h"
 #include "Sprite.h"
 #include "ParticleManager.h"
+#include "Object3d.h"
+#include"NoBillObj.h"
 #include "DebugText.h"
 
 /// <summary>
@@ -62,9 +64,20 @@ private: // メンバ変数
 	/// </summary>
 	Sprite* spriteBG = nullptr;
 	ParticleManager* particleMan = nullptr;
+	Object3d* object3d;
+	NoBillObj* nbObj;
 
 	Sprite* sprite1 = nullptr;
 	Sprite* sprite2 = nullptr;
+
+	//シーン管理
+	enum Scene
+	{
+		one,
+		two,
+		max
+	};
+	int	scene;
 };
 
 template<class T>
