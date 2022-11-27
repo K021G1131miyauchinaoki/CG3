@@ -760,7 +760,7 @@ void Object3d::Update()
 	// ワールド行列の合成
 	matWorld = XMMatrixIdentity(); // 変形をリセット
 	//ビルボード行列を乗算
-	//matWorld *= matBillboard;									/*ビルボード行列かY軸のビルボード行列変更可*/
+	matWorld *= matBillboard;									/*ビルボード行列かY軸のビルボード行列変更可*/
 
 	matWorld *= matScale; // ワールド行列にスケーリングを反映
 	matWorld *= matRot; // ワールド行列に回転を反映

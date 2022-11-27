@@ -225,4 +225,3 @@ private: // メンバ変数
 	//Y軸周りのビルボード行列
 	static	XMMATRIX	matBillboardY;
 };
-
