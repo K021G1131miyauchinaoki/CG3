@@ -30,8 +30,10 @@ void main(
 	GSOutput elemdent;
 	//4点分まわす
 	for (uint i = 0; i < vnum; i++) {
-		//ワールド座標ベースで、ずらす
-		elemdent.svpos = input[0].pos + offset_array[i];
+		//中心からのオフセットをビルボード回転（モデル座標）
+		float4	offset = mul(matBillboard, offset_array[i]);
+		//オフセット分ずらす（ワールド座標）
+		elemdent.svpos = input[0].pos + offset;
 		//ビュー、射影変換
 		elemdent.svpos = mul(mat, elemdent.svpos);
 		//elemdent.uv = float2(0.5f, 0.5f);

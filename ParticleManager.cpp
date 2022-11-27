@@ -65,7 +65,7 @@ void ParticleManager::StaticInitialize(ID3D12Device * device, int window_width, 
 void ParticleManager::PreDraw(ID3D12GraphicsCommandList * cmdList)
 {
 	// PreDrawとPostDrawがペアで呼ばれていなければエラー
-	assert(Object3d::cmdList == nullptr);
+	assert(ParticleManager::cmdList == nullptr);
 
 	// コマンドリストをセット
 	ParticleManager::cmdList = cmdList;
@@ -561,18 +561,27 @@ void ParticleManager::CreateModel()
 	//	{{+5.0f,-5.0f,0.0f},{0,0,1},{1,1}},//右下
 	//	{{+5.0f,+5.0f,0.0f},{0,0,1},{1,0}},//右上
 	//};
-	VertexPos verticesPoint[] = {
+	/*VertexPos verticesPoint[] = {
 		{{0.0f,0.0f,0.0f}}
-	};
+	};*/
 
 	//メンバ変数にコピー
 	//std::copy(std::begin(verticesSquare), std::end(verticesSquare), vertices);
-	std::copy(std::begin(verticesPoint), std::end(verticesPoint), vertices);
+	//std::copy(std::begin(verticesPoint), std::end(verticesPoint), vertices);
 	/*unsigned	short	indicesSquare[] = {
 		0,1,2,
 		2,1,3,
 	};
 	std::copy(std::begin(indicesSquare), std::end(indicesSquare), vertices);*/
+
+for (int i = 0; i < vertexCount; i++)
+{
+	//XYZ全て[-5.0f,+5.0f]でランダムに分布
+	const	float	rnd_width = 10.0f;
+	vertices[i].pos.x = (float)rand() / RAND_MAX * rnd_width - rnd_width / 2.0f;
+	vertices[i].pos.y = (float)rand() / RAND_MAX * rnd_width - rnd_width / 2.0f;
+	vertices[i].pos.z = (float)rand() / RAND_MAX * rnd_width - rnd_width / 2.0f;
+}
 
 	UINT sizeVB = static_cast<UINT>(sizeof(vertices));
 
@@ -749,28 +758,28 @@ void ParticleManager::Update()
 	HRESULT result;
 	XMMATRIX matScale, matRot, matTrans;
 
-	// スケール、回転、平行移動行列の計算
-	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
-	matRot = XMMatrixIdentity();
-	matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z));
-	matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x));
-	matRot *= XMMatrixRotationY(XMConvertToRadians(rotation.y));
-	matTrans = XMMatrixTranslation(position.x, position.y, position.z);
+	//// スケール、回転、平行移動行列の計算
+	//matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
+	//matRot = XMMatrixIdentity();
+	//matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z));
+	//matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x));
+	//matRot *= XMMatrixRotationY(XMConvertToRadians(rotation.y));
+	//matTrans = XMMatrixTranslation(position.x, position.y, position.z);
 
-	// ワールド行列の合成
-	matWorld = XMMatrixIdentity(); // 変形をリセット
-	//ビルボード行列を乗算
-	//matWorld *= matBillboard;									/*ビルボード行列かY軸のビルボード行列変更可*/
+	//// ワールド行列の合成
+	//matWorld = XMMatrixIdentity(); // 変形をリセット
+	////ビルボード行列を乗算
+	////matWorld *= matBillboard;									/*ビルボード行列かY軸のビルボード行列変更可*/
 
-	matWorld *= matScale; // ワールド行列にスケーリングを反映
-	matWorld *= matRot; // ワールド行列に回転を反映
-	matWorld *= matTrans; // ワールド行列に平行移動を反映
+	//matWorld *= matScale; // ワールド行列にスケーリングを反映
+	//matWorld *= matRot; // ワールド行列に回転を反映
+	//matWorld *= matTrans; // ワールド行列に平行移動を反映
 
-	// 親オブジェクトがあれば
-	if (parent != nullptr) {
-		// 親オブジェクトのワールド行列を掛ける
-		matWorld *= parent->matWorld;
-	}
+	//// 親オブジェクトがあれば
+	//if (parent != nullptr) {
+	//	// 親オブジェクトのワールド行列を掛ける
+	//	matWorld *= parent->matWorld;
+	//}
 
 	// 定数バッファへデータ転送
 	ConstBufferData* constMap = nullptr;
@@ -779,6 +788,7 @@ void ParticleManager::Update()
 	//constMap->mat = matWorld * matView * matProjection;	
 	// 行列の合成
 	constMap->mat = matView * matProjection;
+	constMap->matBillboard = matBillboard;
 	constBuff->Unmap(0, nullptr);
 }
 
@@ -786,7 +796,7 @@ void ParticleManager::Draw()
 {
 	// nullptrチェック
 	assert(device);
-	assert(Object3d::cmdList);
+	assert(ParticleManager::cmdList);
 		
 	// 頂点バッファの設定
 	cmdList->IASetVertexBuffers(0, 1, &vbView);
