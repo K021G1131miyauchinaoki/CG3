@@ -72,6 +72,7 @@ void GameScene::Update()
 			particleMan->Add(100, pos, vel, acc, 1.0f, 0.0f);
 		}
 	}
+
 	// オブジェクト移動
 	if (input->PushKey(DIK_UP) || input->PushKey(DIK_DOWN) || input->PushKey(DIK_RIGHT) || input->PushKey(DIK_LEFT))
 	{
